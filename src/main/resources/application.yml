@@ -1,1 +1,13 @@
+app:
+  mock-endpoint:
+    account: demo6308572.mockable.io/student/account
+    grades: demo6308572.mockable.io/student/grades
+    address: demo6308572.mockable.io/student/address
 
+spring:
+  data:
+    redis:
+      port: 6379
+      host: localhost
+server:
+  port: 9090
