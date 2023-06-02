@@ -1,8 +1,8 @@
 app:
   mock-endpoint:
+    address: demo6308572.mockable.io/student/address
     account: demo6308572.mockable.io/student/account
     grades: demo6308572.mockable.io/student/grades
-    address: demo6308572.mockable.io/student/address
 
 spring:
   data:
