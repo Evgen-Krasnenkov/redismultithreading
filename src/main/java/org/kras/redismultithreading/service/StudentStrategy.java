@@ -1,9 +1,7 @@
 package org.kras.redismultithreading.service;
 
 import org.kras.redismultithreading.model.Student;
-import org.kras.redismultithreading.model.dto.AccountDto;
-import org.kras.redismultithreading.util.ExternalServiceCall;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,21 +13,22 @@ public class StudentStrategy {
 
     public static final String API = "API";
     public static final String DEFAULT = "DEFAULT";
-    private final RedisTemplate<String, Student> redisTemplate;
-    private final ExternalServiceCall<AccountDto> externalServiceCall;
+    @Qualifier("cacheService")
+    private StudentService studentServiceCache;
+    @Qualifier("apiService")
+    private StudentService studentServiceApi;
 
-    public StudentStrategy(RedisTemplate<String, Student> redisTemplate, ExternalServiceCall<AccountDto> externalServiceCall) {
-        this.redisTemplate = redisTemplate;
-        this.externalServiceCall = externalServiceCall;
+    public StudentStrategy(@Qualifier("cacheService") StudentService studentServiceCache,
+                           @Qualifier("apiService") StudentService studentServiceApi) {
+        this.studentServiceCache = studentServiceCache;
+        this.studentServiceApi = studentServiceApi;
     }
 
     public StudentService getStrategy(Student student) {
         Map<String, StudentService> strategies = new HashMap<>();
-        StudentService serviceApi = new StudentServiceApiImpl<AccountDto>(externalServiceCall);
-        StudentService serviceCache = new StudentServiceCacheImpl(redisTemplate);
-        strategies.put(API, serviceApi);
-        strategies.put(DEFAULT, serviceCache);
-        return strategies.getOrDefault(chooser.apply(student), serviceApi);
+        strategies.put(DEFAULT, studentServiceCache);
+        strategies.put(API, studentServiceApi);
+        return strategies.getOrDefault(chooser.apply(student), studentServiceCache);
     }
 
     Function<Student, String> chooser = (student -> null == student ? API : DEFAULT);

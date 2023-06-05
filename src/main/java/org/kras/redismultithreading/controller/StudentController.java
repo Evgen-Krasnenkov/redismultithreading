@@ -13,20 +13,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-    private final StudentService studentService;
+
+    private final StudentService studentServiceCacheImpl;
     private final StudentMapper mapper;
     private final StudentStrategy studentStrategy;
 
-    public StudentController(StudentService studentService, StudentMapper mapper, StudentStrategy studentStrategy) {
-        this.studentService = studentService;
+    public StudentController(StudentService studentServiceCacheImpl, StudentMapper mapper,
+                             StudentStrategy studentStrategy) {
+        this.studentServiceCacheImpl = studentServiceCacheImpl;
         this.mapper = mapper;
         this.studentStrategy = studentStrategy;
     }
 
     @GetMapping("/{id}")
     public StudentResponseDto getStudentByNumber(@PathVariable String id) {
-        Student student = studentService.getStudent(id);
-        student = studentStrategy.getStrategy(student).getStudent(id);
+        Student student = studentServiceCacheImpl.getStudent(id);
+        StudentService service = studentStrategy.getStrategy(student);
+        student = service.getStudent(id);
+        service.saveStudent(student);
         return mapper.toResponseDto(student);
     }
 }
