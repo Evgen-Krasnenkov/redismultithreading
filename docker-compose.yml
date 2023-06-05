@@ -11,6 +11,7 @@ services:
 
   app:
     build: '.'
+    container_name: app-student
     depends_on:
       - app-redis
     ports:
