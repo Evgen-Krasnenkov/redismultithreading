@@ -17,8 +17,8 @@ import java.util.Properties;
 public class StudentServiceApiImpl implements StudentService {
 
     private final ExternalServiceCall<AccountDto> accountExtService;
-    private ExternalServiceCall<GradeDto> gradeExtService;
-    private ExternalServiceCall<AddressDto> addressExtService;
+    private final ExternalServiceCall<GradeDto> gradeExtService;
+    private final ExternalServiceCall<AddressDto> addressExtService;
 
     @Value("${mock-endpoint.address}")
     public void setUrlAddress(String urlAddress) {
@@ -65,7 +65,16 @@ public class StudentServiceApiImpl implements StudentService {
         } catch (Exception e) {
             throw new RuntimeException("Call problem", e);
         }
-        return null;
+        Student student = Student.builder()
+                .address(addressDto.address())
+                .grades(gradeDto.grades())
+                .phoneNumber(accountDto.phoneNumber())
+                .studentNumber(accountDto.studentNumber())
+                .firstName(accountDto.firstName())
+                .lastName(accountDto.lastName())
+                .build();
+        saveStudent(student);
+        return student;
     }
 }
 

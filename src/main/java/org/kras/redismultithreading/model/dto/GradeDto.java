@@ -1,4 +1,8 @@
 package org.kras.redismultithreading.model.dto;
 
-public record GradeDto(String subject, String grade) {
+import org.kras.redismultithreading.model.Grade;
+
+import java.util.List;
+
+public record GradeDto(String studentNumber, List<Grade> grades) {
 }

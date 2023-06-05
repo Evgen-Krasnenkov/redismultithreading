@@ -31,7 +31,8 @@ public class StudentStrategy {
 
     public StudentService getStrategy(Student student) {
         Map<String, StudentService> strategies = new HashMap<>();
-        StudentService serviceApi = new StudentServiceApiImpl(accountExtService, gradeExtService, addressExtService);
+        StudentService serviceApi = new StudentServiceApiImpl(accountExtService, gradeExtService,
+                addressExtService);
         StudentService serviceCache = new StudentServiceCacheImpl(redisTemplate);
         strategies.put(API, serviceApi);
         strategies.put(DEFAULT, serviceCache);
