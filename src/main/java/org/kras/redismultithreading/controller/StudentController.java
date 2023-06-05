@@ -1,6 +1,5 @@
 package org.kras.redismultithreading.controller;
 
-import org.kras.redismultithreading.model.Student;
 import org.kras.redismultithreading.model.dto.StudentResponseDto;
 import org.kras.redismultithreading.service.ChainServiceBuilder;
 import org.kras.redismultithreading.service.StudentService;
@@ -12,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController {
 
+    public static final int THREADS = 8;
     private final StudentService studentApiService;
     private final StudentService studentCacheService;
     private final StudentMapper mapper;
@@ -33,13 +35,13 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public StudentResponseDto getStudentByNumber(@PathVariable String id) {
-        StudentService studentService = chainServiceBuilder
-                .setService(studentCacheService)
-                .setService(studentApiService)
-                .build();
-        Student student = studentService.getStudent(Optional.empty(), id);
-        return mapper.toResponseDto(student);
+    public CompletableFuture<StudentResponseDto> getStudentByNumber(@PathVariable String id) {
+        return CompletableFuture.supplyAsync(() -> chainServiceBuilder
+                        .setService(studentCacheService)
+                        .setService(studentApiService)
+                        .build(), Executors.newFixedThreadPool(THREADS))
+                .thenApplyAsync(service -> service.getStudent(Optional.empty(), id))
+                .thenApplyAsync(mapper::toResponseDto);
     }
 }
 
