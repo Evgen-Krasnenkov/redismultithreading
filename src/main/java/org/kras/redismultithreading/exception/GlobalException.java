@@ -1,6 +1,6 @@
 package org.kras.redismultithreading.exception;
 
-public class GlobalException extends Exception{
+public class GlobalException extends RuntimeException{
     public GlobalException(String e, Throwable throwable){
         super(e, throwable);
     }
