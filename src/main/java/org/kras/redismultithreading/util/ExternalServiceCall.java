@@ -14,7 +14,7 @@ public class ExternalServiceCall<T> {
     private final WebClient webClient = WebClient.create();
 
     public T getPart(String url, Class<T> tClass, String number) throws URISyntaxException {
-        T t = webClient.get()
+        return webClient.get()
                 .uri(new URI(url))
                 .retrieve()
                 .onStatus(resp -> resp.is4xxClientError() || resp.is5xxServerError(),
@@ -22,6 +22,5 @@ public class ExternalServiceCall<T> {
                 .bodyToMono(tClass)
                 .blockOptional(Duration.ofSeconds(SECONDS))
                 .orElseThrow(() -> new RuntimeException("3rd Party API fails"));
-        return t;
     }
 }

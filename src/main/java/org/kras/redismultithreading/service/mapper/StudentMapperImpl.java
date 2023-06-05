@@ -17,13 +17,13 @@ public class StudentMapperImpl implements StudentMapper {
     @Override
     public StudentResponseDto toResponseDto(Student student) {
         return StudentResponseDto.builder()
-                .phoneNumber(student.phoneNumber())
-                .studentNumber(student.studentNumber())
-                .address(student.address())
-                .grades(student.grades())
-                .firstName(student.firstName())
-                .lastName(student.lastName())
-                .studentNumber(student.studentNumber())
+                .phoneNumber(student.getPhoneNumber())
+                .studentNumber(student.getStudentNumber())
+                .address(student.getAddress())
+                .grades(student.getGrades())
+                .firstName(student.getFirstName())
+                .lastName(student.getLastName())
+                .studentNumber(student.getStudentNumber())
                 .build();
     }
 }

@@ -1,4 +1,6 @@
 package org.kras.redismultithreading.model;
 
-public record Grade(String subject, String grade) {
+import java.io.Serializable;
+
+public record Grade(String subject, String grade) implements Serializable {
 }

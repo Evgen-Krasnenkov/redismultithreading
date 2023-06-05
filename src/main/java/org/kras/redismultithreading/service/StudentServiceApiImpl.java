@@ -4,21 +4,23 @@ import org.kras.redismultithreading.model.Student;
 import org.kras.redismultithreading.model.dto.AccountDto;
 import org.kras.redismultithreading.model.dto.AddressDto;
 import org.kras.redismultithreading.model.dto.GradeDto;
+import org.kras.redismultithreading.service.mapper.ApiResponseMapper;
 import org.kras.redismultithreading.util.ExternalServiceCall;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.Properties;
-
 @Component
 @PropertySource("classpath:application.yaml")
+@Qualifier("apiService")
 public class StudentServiceApiImpl implements StudentService {
 
     private final ExternalServiceCall<AccountDto> accountExtService;
     private final ExternalServiceCall<GradeDto> gradeExtService;
     private final ExternalServiceCall<AddressDto> addressExtService;
+    private final StudentService studentService;
+    private final ApiResponseMapper mapper;
 
     @Value("${mock-endpoint.address}")
     public void setUrlAddress(String urlAddress) {
@@ -35,29 +37,25 @@ public class StudentServiceApiImpl implements StudentService {
 
     public StudentServiceApiImpl(ExternalServiceCall<AccountDto> accountExtService,
                                  ExternalServiceCall<GradeDto> gradeExtService,
-                                 ExternalServiceCall<AddressDto> addressExtService) {
+                                 ExternalServiceCall<AddressDto> addressExtService,
+                                 @Qualifier("cacheService") StudentService studentService, ApiResponseMapper mapper) {
         this.accountExtService = accountExtService;
         this.gradeExtService = gradeExtService;
         this.addressExtService = addressExtService;
+        this.studentService = studentService;
+        this.mapper = mapper;
     }
 
     @Override
     public void saveStudent(Student student) {
-
+        studentService.saveStudent(student);
     }
 
     @Override
     public Student getStudent(String studentNumber) {
-        Properties props = new Properties();
-        try {
-            props.load(StudentServiceApiImpl.class.getResourceAsStream("/application.yaml"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        String property = props.getProperty("mock-endpoint.address");
-        AccountDto accountDto = null;
-        GradeDto gradeDto = null;
-        AddressDto addressDto = null;
+        AccountDto accountDto;
+        GradeDto gradeDto;
+        AddressDto addressDto;
         try {
             gradeDto = gradeExtService.getPart(urlGrades, GradeDto.class, studentNumber);
             accountDto = accountExtService.getPart(urlAccount, AccountDto.class, studentNumber);
@@ -65,14 +63,7 @@ public class StudentServiceApiImpl implements StudentService {
         } catch (Exception e) {
             throw new RuntimeException("Call problem", e);
         }
-        Student student = Student.builder()
-                .address(addressDto.address())
-                .grades(gradeDto.grades())
-                .phoneNumber(accountDto.phoneNumber())
-                .studentNumber(accountDto.studentNumber())
-                .firstName(accountDto.firstName())
-                .lastName(accountDto.lastName())
-                .build();
+        Student student = mapper.toModel(accountDto, addressDto, gradeDto);
         saveStudent(student);
         return student;
     }

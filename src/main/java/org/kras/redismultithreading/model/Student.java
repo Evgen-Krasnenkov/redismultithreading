@@ -1,13 +1,18 @@
 package org.kras.redismultithreading.model;
 
 import lombok.Builder;
+import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 @Builder
-public record Student(String studentNumber, String firstName, String lastName, String phoneNumber, List<Grade> grades,
-                      Address address) {
-    public Student {
-    }
+@Data
+public class Student implements Serializable {
+    private String studentNumber;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private List<Grade> grades;
+    private Address address;
 }
