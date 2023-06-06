@@ -9,13 +9,11 @@ import org.kras.redismultithreading.service.mapper.ApiResponseMapper;
 import org.kras.redismultithreading.util.ExternalServiceCall;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-@PropertySource("classpath:application.yaml")
 @Qualifier("apiService")
 public class StudentServiceApiImpl extends StudentService {
 
