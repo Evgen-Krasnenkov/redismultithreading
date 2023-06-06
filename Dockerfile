@@ -14,6 +14,6 @@ COPY --from=build /home/gradle/src/build/libs/redismultithreading-0.0.1-SNAPSHOT
 ADD https://raw.githubusercontent.com/Evgen-Krasnenkov/redismultithreading/master/src/main/resources/application.yaml /app/application.yaml
 
 ENV SPRING_CONFIG_LOCATION="file:/app/application.yaml"
-ENV _JAVA_OPTIONS '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'
+ENV JAVA_OPTIONS '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'
 
-ENTRYPOINT ["sh", "-c", "java $_JAVA_OPTIONS -jar /app/app.jar --spring.config.location=$SPRING_CONFIG_LOCATION"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTIONS -jar /app/app.jar --spring.config.location=$SPRING_CONFIG_LOCATION"]
