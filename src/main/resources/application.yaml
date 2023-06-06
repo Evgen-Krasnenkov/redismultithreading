@@ -1,5 +1,5 @@
 mock-endpoint:
-  address: "demo6308572.mockable.io/student/address"
+  address: demo6308572.mockable.io/student/address
   account: demo6308572.mockable.io/student/account
   grades: demo6308572.mockable.io/student/grades
 

@@ -10,6 +10,15 @@ To run this application, you need to have Docker and Docker Compose installed on
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
 
+### If you want to build image and then run it in a container:
+
+```bash
+docker build -t jackredd/student:1.0 .
+
+docker run -d -p 8080:8080 -p 5005:5005 --name jwt-app jackredd/student:1.0
+
+```
+
 ### Running the Application and Making a Request
 To run the application, execute the following command in your terminal:
 

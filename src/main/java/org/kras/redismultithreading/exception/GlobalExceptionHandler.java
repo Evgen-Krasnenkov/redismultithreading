@@ -18,18 +18,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<String> handleValidationException(GlobalException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Problem happened failed: " + ex.getMessage());
+                .body("Problem happened: " + ex.getMessage());
     }
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleException(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Processing failed: " + ex.getMessage());
+                .body("Processing failed: " + ex);
     }
 
     @ExceptionHandler(SerializationException.class)
     public ResponseEntity<String> handleSerializationException(SerializationException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Processing failed: " + ex.getMessage());
+                .body("Serialization processing failed: " + ex);
     }
     //TODO expend if more custom exceptions are necessary
 }

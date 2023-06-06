@@ -31,9 +31,10 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    implementation group: 'com.playtika.testcontainers', name: 'testcontainers-spring-boot', version: '3.0.0-RC7', ext: 'pom'
     testImplementation 'io.projectreactor:reactor-test'
-    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.3'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.3'
 }
 
 tasks.named('test') {
