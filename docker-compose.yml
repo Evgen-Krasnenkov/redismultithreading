@@ -1,4 +1,4 @@
-version: '1.0'
+version: '3.8'
 
 services:
   app-redis:
@@ -8,6 +8,8 @@ services:
       - "6379:6379"
       - "8001:8001"
     restart: always
+    networks:
+      - backend-network
 
   app:
     image: jackredd/student:1.0
@@ -18,3 +20,9 @@ services:
       - "9090:9090"
       - "5005:5005"
     restart: always
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
