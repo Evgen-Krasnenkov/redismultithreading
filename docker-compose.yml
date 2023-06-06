@@ -20,6 +20,8 @@ services:
       - "9090:9090"
       - "5005:5005"
     restart: always
+    environment:
+      - SPRING_CONFIG_LOCATION=https://raw.githubusercontent.com/Evgen-Krasnenkov/redismultithreading/master/src/main/resources/application.yaml
     networks:
       - backend-network
 
