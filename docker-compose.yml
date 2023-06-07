@@ -21,9 +21,11 @@ services:
       - "5005:5005"
     restart: always
     environment:
-      - SPRING_CONFIG_LOCATION=https://raw.githubusercontent.com/Evgen-Krasnenkov/redismultithreading/master/src/main/resources/application.yaml
+      - SPRING_CONFIG_LOCATION=/app/application.yaml
     networks:
       - backend-network
+    volumes:
+      - ./src/main/resources/application.yaml:/app/application.yaml
 
 networks:
   backend-network:
